@@ -1,0 +1,8 @@
+/*
+  Cache-Control: no-cache
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+/api/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Headers: Authorization, Content-Type
+  Cache-Control: no-store

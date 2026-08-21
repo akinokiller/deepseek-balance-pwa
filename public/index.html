@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DeepSeek余额">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+<link rel="manifest" href="/manifest.json">
+<title>DeepSeek 余额</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#1c1c1e;--card2:#2c2c2e;--border:#38383a;--text:#f5f5f7;--muted:#98989d;--accent:#4f46e5;--accent2:#7c3aed;--success:#30d158;--warn:#ff9f0a;--radius:20px}
+@media(prefers-color-scheme:light){:root{--bg:#f2f2f7;--card:#ffffff;--card2:#f2f2f7;--border:#e5e5ea;--text:#1d1d1f;--muted:#86868b}}
+*{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);-webkit-font-smoothing:antialiased}
+.wrap{width:100%;max-width:420px;padding:24px 0 32px}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:grid;place-items:center;font-weight:800;font-size:18px;color:white;letter-spacing:-0.5px;flex-shrink:0}
+.header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;line-height:1}
+.header p{font-size:13px;color:var(--muted);margin-top:2px}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,0.12)}
+.card-label{font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.input-row{display:flex;gap:8px}
+.input{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:15px;color:var(--text);outline:none;width:100%;transition:border-color .2s}
+.input:focus{border-color:var(--accent)}
+.input::placeholder{color:var(--muted)}
+.btn{border:none;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+.btn-primary:active{transform:scale(0.97);opacity:.9}
+.btn-ghost{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:active{transform:scale(0.97)}
+.btn-small{padding:8px 12px;font-size:13px;border-radius:10px}
+.icon-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:var(--card2);border:1px solid var(--border);cursor:pointer;color:var(--muted);flex-shrink:0}
+.icon-btn:active{transform:scale(0.95)}
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.stat{background:var(--card2);border-radius:16px;padding:14px;border:1px solid var(--border)}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.stat-value{font-size:22px;font-weight:700;letter-spacing:-0.8px;margin-top:6px;line-height:1}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.hero{margin-top:16px;background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#2563eb 100%);border-radius:var(--radius);padding:20px;color:white;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(400px 200px at 80% -20%, rgba(255,255,255,.18), transparent 60%);pointer-events:none}
+.hero-label{font-size:11px;font-weight:600;letter-spacing:.8px;opacity:.8;text-transform:uppercase;position:relative}
+.hero-value{font-size:36px;font-weight:800;letter-spacing:-1.5px;margin-top:8px;position:relative;line-height:1}
+.hero-sub{font-size:13px;opacity:.85;margin-top:6px;position:relative}
+.hero-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;position:relative}
+.badge{font-size:11px;font-weight:700;padding:5px 10px;border-radius:100px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);display:inline-block;margin-right:6px;vertical-align:middle}
+.dot.off{background:#ff3b30;box-shadow:0 0 8px #ff3b30}
+.status{font-size:13px;color:var(--muted);text-align:center;padding:12px}
+.error{color:#ff3b30;font-size:13px;background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.2);border-radius:12px;padding:12px 14px;margin-top:12px}
+.hint{font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px;text-align:center}
+.hint a{color:var(--accent);text-decoration:none}
+.footer{margin-top:20px;text-align:center;font-size:11px;color:var(--muted);line-height:1.6}
+.install-bar{display:none;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 14px;margin-bottom:16px}
+.install-bar.show{display:flex}
+.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%, var(--border) 50%, var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:12px;height:20px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">DS</div>
+    <div>
+      <h1>DeepSeek 余额</h1>
+      <p>添加到主屏幕 · 像原生App一样使用</p>
+    </div>
+  </div>
+
+  <div id="installBar" class="install-bar">
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:600">安装到桌面</div>
+      <div style="font-size:11px;color:var(--muted)">Safari → 分享 → 添加到主屏幕</div>
+    </div>
+    <button class="btn btn-ghost btn-small" onclick="this.parentElement.style.display='none'">知道了</button>
+  </div>
+
+  <div class="card" id="configCard">
+    <div class="card-label">API Key</div>
+    <div class="input-row">
+      <input id="apiKey" class="input" type="password" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+      <button class="icon-btn" id="toggleEye" title="显示/隐藏">👁️</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-primary" style="flex:1" id="saveBtn" onclick="saveAndFetch()">保存并查询</button>
+      <button class="btn btn-ghost" id="clearBtn" onclick="clearKey()">清除</button>
+    </div>
+    <div class="hint">Key仅保存在本机 <code>localStorage</code>，不会上传到服务器<br><a href="https://platform.deepseek.com/api_keys" target="_blank">去 DeepSeek 平台创建 Key →</a></div>
+  </div>
+
+  <div id="result" style="margin-top:16px;display:none"></div>
+  <div id="status" class="status"></div>
+
+  <div class="footer">
+    无需开发者账号 · 无需签名 · PWA 永久可用<br>
+    开源部署在 Cloudflare · 数据直连 DeepSeek 官方
+  </div>
+</div>
+
+<script>
+const $ = s => document.getElementById(s);
+const KEY = 'deepseek_api_key';
+
+function loadKey(){
+  const k = localStorage.getItem(KEY) || '';
+  $('apiKey').value = k;
+  if(k) fetchBalance(k);
+  // iOS standalone detection
+  const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+  if(!isStandalone) $('installBar').classList.add('show');
+}
+$('toggleEye').onclick = () => {
+  const i = $('apiKey');
+  i.type = i.type === 'password' ? 'text' : 'password';
+};
+$('apiKey').addEventListener('keydown', e=>{ if(e.key==='Enter') saveAndFetch(); });
+
+function saveAndFetch(){
+  const k = $('apiKey').value.trim();
+  if(!k){ toast('请输入 API Key'); return; }
+  if(!k.startsWith('sk-')){ toast('Key 格式应为 sk- 开头'); }
+  localStorage.setItem(KEY, k);
+  fetchBalance(k);
+}
+function clearKey(){
+  localStorage.removeItem(KEY);
+  $('apiKey').value='';
+  $('result').style.display='none';
+  $('status').innerHTML='';
+}
+function toast(msg){
+  $('status').innerHTML = `<div class="error">${msg}</div>`;
+  setTimeout(()=>$('status').innerHTML='', 3000);
+}
+
+async function fetchBalance(key){
+  $('status').innerHTML = '<div class="status pulse">查询中…</div>';
+  $('result').style.display='none';
+  $('saveBtn').textContent='查询中…';
+  $('saveBtn').disabled=true;
+  try{
+    let data, ok=false, errMsg='';
+    // 1) try proxy first (no CORS issue), then direct
+    const endpoints = [
+      {url:'/api/balance', via:'proxy'},
+      {url:'https://api.deepseek.com/user/balance', via:'direct'}
+    ];
+    for(const ep of endpoints){
+      try{
+        const r = await fetch(ep.url, {
+          headers:{'Authorization':'Bearer '+key},
+          cache:'no-store'
+        });
+        const text = await r.text();
+        let j;
+        try{ j=JSON.parse(text); }catch{ j={raw:text} }
+        if(r.ok && (j.balance_infos || j.is_available!==undefined)){
+          data=j; ok=true; break;
+        } else {
+          errMsg = j.error?.message || j.msg || j.message || text.slice(0,200) || `HTTP ${r.status}`;
+          // if 401/403 no need to try next
+          if(r.status===401 || r.status===403) break;
+          // else try next endpoint
+          continue;
+        }
+      }catch(e){
+        errMsg = e.message;
+        continue;
+      }
+    }
+    if(!ok) throw new Error(errMsg || '请求失败，请检查Key或网络');
+
+    render(data, key);
+    $('status').innerHTML = `<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">更新于 ${new Date().toLocaleString()} · 每30秒自动刷新</div>`;
+    // auto refresh
+    clearInterval(window._timer);
+    window._timer = setInterval(()=> fetchBalanceSilent(key), 30000);
+  }catch(e){
+    $('status').innerHTML = `<div class="error">❌ ${e.message}</div>`;
+  }finally{
+    $('saveBtn').textContent='保存并查询';
+    $('saveBtn').disabled=false;
+  }
+}
+async function fetchBalanceSilent(key){
+  try{
+    const r = await fetch('/api/balance', {headers:{'Authorization':'Bearer '+key}, cache:'no-store'});
+    const j = await r.json();
+    if(r.ok) render(j, key);
+  }catch{}
+}
+
+function render(data, key){
+  const info = (data.balance_infos && data.balance_infos[0]) || {};
+  const total = info.total_balance ?? '0.00';
+  const granted = info.granted_balance ?? '0.00';
+  const topped = info.topped_up_balance ?? '0.00';
+  const cur = info.currency || 'CNY';
+  const avail = data.is_available;
+  const totalNum = parseFloat(total);
+
+  let level = '正常';
+  let color = 'var(--success)';
+  if(totalNum < 1) { level='余额不足'; color='var(--warn)'; }
+  if(totalNum <= 0 || avail===false) { level='不可用'; color='#ff3b30'; }
+
+  $('result').innerHTML = `
+    <div class="hero">
+      <div class="hero-label">总余额 · ${cur}</div>
+      <div class="hero-value">${Number(total).toFixed(2)} <span style="font-size:18px;font-weight:600;opacity:.9">${cur}</span></div>
+      <div class="hero-sub"><span class="dot ${avail===false?'off':''}"></span>${avail===false?'账户不可用': avail===true?'账户可用':' '} · ${level} · <span style="opacity:.9">${cur} ${total}</span></div>
+      <div class="hero-foot">
+        <span class="badge">${avail===false?'🔴 不可用':'🟢 可用'}</span>
+        <button class="btn btn-ghost btn-small" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.2);backdrop-filter:blur(8px)" onclick="copyBalance('${total}')">复制余额</button>
+      </div>
+    </div>
+    <div class="balance-grid">
+      <div class="stat">
+        <div class="stat-label">赠送余额</div>
+        <div class="stat-value">${Number(granted).toFixed(2)}</div>
+        <div class="stat-sub">${cur} · 赠送</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">充值余额</div>
+        <div class="stat-value">${Number(topped).toFixed(2)}</div>
+        <div class="stat-sub">${cur} · 充值</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-ghost" style="flex:1" onclick="fetchBalance(localStorage.getItem('${KEY}'))">🔄 刷新</button>
+      <button class="btn btn-ghost" style="flex:1" onclick="copyKey()">📋 复制Key</button>
+    </div>
+  `;
+  $('result').style.display='block';
+  // update theme color by balance
+  try{ document.querySelector('meta[name="theme-color"]').content = totalNum<1 ? '#1c1c1e' : '#4f46e5'; }catch{}
+}
+
+function copyBalance(v){
+  navigator.clipboard.writeText(v).then(()=> toast('已复制: '+v));
+}
+function copyKey(){
+  const k = localStorage.getItem(KEY)||'';
+  if(!k) return toast('没有Key');
+  navigator.clipboard.writeText(k).then(()=> toast('Key 已复制'));
+}
+
+// sw
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+loadKey();
+</script>
+</body>
+</html>
