@@ -14,17 +14,17 @@
 <title>DeepSeek 余额</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0f;--card:#1c1c1e;--card2:#2c2c2e;--border:#38383a;--text:#f5f5f7;--muted:#98989d;--accent:#4f46e5;--accent2:#7c3aed;--success:#30d158;--warn:#ff9f0a;--radius:20px}
+:root{--bg:#0a0a0f;--card:#1c1c1e;--card2:#2c2c2e;--border:#38383a;--text:#f5f5f7;--muted:#98989d;--accent:#4f46e5;--accent2:#7c3aed;--success:#30d158;--warn:#ff9f0a;--danger:#ff3b30;--radius:20px}
 @media(prefers-color-scheme:light){:root{--bg:#f2f2f7;--card:#ffffff;--card2:#f2f2f7;--border:#e5e5ea;--text:#1d1d1f;--muted:#86868b}}
 *{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif}
 body{background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);-webkit-font-smoothing:antialiased}
-.wrap{width:100%;max-width:420px;padding:24px 0 32px}
-.header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.wrap{width:100%;max-width:420px;padding:20px 0 32px}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:grid;place-items:center;font-weight:800;font-size:18px;color:white;letter-spacing:-0.5px;flex-shrink:0}
 .header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;line-height:1}
 .header p{font-size:13px;color:var(--muted);margin-top:2px}
 .card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,0.12)}
-.card-label{font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.card-label{font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .input-row{display:flex;gap:8px}
 .input{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:15px;color:var(--text);outline:none;width:100%;transition:border-color .2s}
 .input:focus{border-color:var(--accent)}
@@ -37,12 +37,30 @@ body{background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-
 .btn-small{padding:8px 12px;font-size:13px;border-radius:10px}
 .icon-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:var(--card2);border:1px solid var(--border);cursor:pointer;color:var(--muted);flex-shrink:0}
 .icon-btn:active{transform:scale(0.95)}
-.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+/* period bar */
+.period{border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid transparent;position:relative;overflow:hidden;margin-bottom:14px}
+.period.valley{background:linear-gradient(135deg, rgba(48,209,88,0.18), rgba(48,209,88,0.06));border-color:rgba(48,209,88,0.25)}
+.period.peak{background:linear-gradient(135deg, rgba(255,159,10,0.22), rgba(255,59,48,0.14));border-color:rgba(255,159,10,0.3)}
+.period.flat{background:linear-gradient(135deg, rgba(79,70,229,0.18), rgba(124,58,237,0.10));border-color:rgba(79,70,229,0.25)}
+.period-left{display:flex;align-items:center;gap:10px}
+.period-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.period.valley .period-dot{background:var(--success);box-shadow:0 0 10px var(--success)}
+.period.peak .period-dot{background:var(--warn);box-shadow:0 0 10px var(--warn);animation:pulse 1.6s infinite}
+.period.flat .period-dot{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.period-title{font-size:14px;font-weight:700;letter-spacing:-0.3px}
+.period-sub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
+.period-right{text-align:right}
+.period-price{font-size:13px;font-weight:700}
+.period-countdown{font-size:11px;color:var(--muted);margin-top:2px}
+.period-note{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.4}
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .stat{background:var(--card2);border-radius:16px;padding:14px;border:1px solid var(--border)}
 .stat-label{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .stat-value{font-size:22px;font-weight:700;letter-spacing:-0.8px;margin-top:6px;line-height:1}
 .stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
-.hero{margin-top:16px;background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#2563eb 100%);border-radius:var(--radius);padding:20px;color:white;position:relative;overflow:hidden}
+.hero{margin-top:14px;background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#2563eb 100%);border-radius:var(--radius);padding:20px;color:white;position:relative;overflow:hidden;transition:all .3s}
+.hero.valley{background:linear-gradient(135deg,#0a7a2e 0%,#30d158 55%,#0ea5a0 100%)}
+.hero.peak{background:linear-gradient(135deg,#ff6a00 0%,#ff3b30 55%,#af52de 100%)}
 .hero::after{content:'';position:absolute;inset:0;background:radial-gradient(400px 200px at 80% -20%, rgba(255,255,255,.18), transparent 60%);pointer-events:none}
 .hero-label{font-size:11px;font-weight:600;letter-spacing:.8px;opacity:.8;text-transform:uppercase;position:relative}
 .hero-value{font-size:36px;font-weight:800;letter-spacing:-1.5px;margin-top:8px;position:relative;line-height:1}
@@ -51,17 +69,36 @@ body{background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-
 .badge{font-size:11px;font-weight:700;padding:5px 10px;border-radius:100px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);display:inline-block;margin-right:6px;vertical-align:middle}
 .dot.off{background:#ff3b30;box-shadow:0 0 8px #ff3b30}
+.dot.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
 .status{font-size:13px;color:var(--muted);text-align:center;padding:12px}
 .error{color:#ff3b30;font-size:13px;background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.2);border-radius:12px;padding:12px 14px;margin-top:12px}
 .hint{font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px;text-align:center}
 .hint a{color:var(--accent);text-decoration:none}
 .footer{margin-top:20px;text-align:center;font-size:11px;color:var(--muted);line-height:1.6}
-.install-bar{display:none;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 14px;margin-bottom:16px}
+.install-bar{display:none;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 14px;margin-bottom:14px}
 .install-bar.show{display:flex}
 .pulse{animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.skeleton{background:linear-gradient(90deg,var(--card2) 25%, var(--border) 50%, var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:12px;height:20px}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
+/* consumption */
+.chart{margin-top:12px}
+.bars{display:flex;align-items:end;gap:6px;height:70px;margin-top:10px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:8px 8px 4px 4px;min-height:4px;transition:height .4s}
+.bar-label{font-size:9px;color:var(--muted);white-space:nowrap}
+.bar-val{font-size:9px;font-weight:600;color:var(--text)}
+.consumption-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.cstat{background:var(--card2);border-radius:14px;padding:12px;text-align:center;border:1px solid var(--border)}
+.cstat-val{font-size:16px;font-weight:700;letter-spacing:-0.5px}
+.cstat-label{font-size:10px;color:var(--muted);margin-top:2px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+.timeline{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-height:220px;overflow:auto}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:12px;font-size:13px}
+.trow-date{font-weight:600}
+.trow-balance{font-weight:700}
+.trow-delta{font-size:11px;padding:3px 7px;border-radius:100px;font-weight:600}
+.delta-up{background:rgba(255,59,48,.12);color:var(--danger);border:1px solid rgba(255,59,48,.2)}
+.delta-down{background:rgba(48,209,88,.12);color:var(--success);border:1px solid rgba(48,209,88,.2)}
+.delta-zero{background:var(--card);color:var(--muted);border:1px solid var(--border)}
 </style>
 </head>
 <body>
@@ -82,8 +119,24 @@ body{background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-
     <button class="btn btn-ghost btn-small" onclick="this.parentElement.style.display='none'">知道了</button>
   </div>
 
+  <!-- 峰谷状态 -->
+  <div id="periodBar" class="period flat">
+    <div class="period-left">
+      <div class="period-dot"></div>
+      <div>
+        <div class="period-title" id="periodTitle">检测中…</div>
+        <div class="period-sub" id="periodSub">北京时间 --:--</div>
+      </div>
+    </div>
+    <div class="period-right">
+      <div class="period-price" id="periodPrice">-</div>
+      <div class="period-countdown" id="periodCountdown">-</div>
+    </div>
+  </div>
+  <div id="periodNote" class="period-note" style="margin:-8px 0 14px 4px"></div>
+
   <div class="card" id="configCard">
-    <div class="card-label">API Key</div>
+    <div class="card-label">API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:11px">仅存本地</span></div>
     <div class="input-row">
       <input id="apiKey" class="input" type="password" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
       <button class="icon-btn" id="toggleEye" title="显示/隐藏">👁️</button>
@@ -92,170 +145,281 @@ body{background:var(--bg);color:var(--text);min-height:100dvh;display:flex;flex-
       <button class="btn btn-primary" style="flex:1" id="saveBtn" onclick="saveAndFetch()">保存并查询</button>
       <button class="btn btn-ghost" id="clearBtn" onclick="clearKey()">清除</button>
     </div>
-    <div class="hint">Key仅保存在本机 <code>localStorage</code>，不会上传到服务器<br><a href="https://platform.deepseek.com/api_keys" target="_blank">去 DeepSeek 平台创建 Key →</a></div>
+    <div class="hint">Key仅保存在本机 <code>localStorage</code><br><a href="https://platform.deepseek.com/api_keys" target="_blank">去 DeepSeek 平台创建 Key →</a></div>
   </div>
 
-  <div id="result" style="margin-top:16px;display:none"></div>
+  <div id="result" style="margin-top:14px;display:none"></div>
+  <div id="consumption" style="display:none"></div>
   <div id="status" class="status"></div>
 
   <div class="footer">
-    无需开发者账号 · 无需签名 · PWA 永久可用<br>
-    开源部署在 Cloudflare · 数据直连 DeepSeek 官方
+    峰谷计费: V4高峰 09:00-12:00/14:00-18:00(北京) 价格×2 · 其余为谷值优惠<br>
+    历史优惠 00:30-08:30(北京) 50-75% off 已于2026-07-24结束，仅作参考<br>
+    消费统计基于本地余额快照计算 · 官方暂无账单API
   </div>
 </div>
 
 <script>
 const $ = s => document.getElementById(s);
 const KEY = 'deepseek_api_key';
+const HIST_KEY = 'deepseek_balance_history_v2';
 
+// ---------- 峰谷逻辑 ----------
+function getBeijingNow(){
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset()*60000;
+  return new Date(utc + 8*3600000);
+}
+function getPeriod(){
+  const bj = getBeijingNow();
+  const h = bj.getHours() + bj.getMinutes()/60;
+  // V4 高峰: 09:00-12:00 和 14:00-18:00 北京
+  const isPeak = (h>=9 && h<12) || (h>=14 && h<18);
+  // 历史优惠窗口: 00:30-08:30 北京 (对应 16:30-00:30 UTC)
+  const isHistOff = (h>=0.5 && h<8.5);
+  let label, sub, price, cls;
+  if(isPeak){
+    label = '🔴 高峰时段';
+    sub = '价格 ×2 · 建议避开';
+    price = '高峰价';
+    cls = 'peak';
+  } else {
+    label = '🟢 谷值优惠';
+    sub = isHistOff ? '历史优惠窗口 · 最便宜' : '谷值 · 推荐使用';
+    price = '谷值价';
+    cls = 'valley';
+  }
+  // 倒计时到下一个切换
+  const mins = bj.getHours()*60 + bj.getMinutes();
+  let nextMins;
+  if(mins < 9*60) nextMins = 9*60;
+  else if(mins < 12*60) nextMins = 12*60;
+  else if(mins < 14*60) nextMins = 14*60;
+  else if(mins < 18*60) nextMins = 18*60;
+  else nextMins = 24*60 + 9*60; // 次日09:00
+  const diff = nextMins - mins;
+  const ch = Math.floor(diff/60), cm = diff%60;
+  const countdown = `${ch>0?ch+'小时':''}${cm}分钟后切换`;
+  const timeStr = bj.toLocaleString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}) + ' · 北京时间';
+  return {isPeak, isHistOff, label, sub, price, cls, countdown, timeStr, bj};
+}
+function renderPeriod(){
+  const p = getPeriod();
+  const bar = $('periodBar');
+  bar.className = 'period ' + p.cls;
+  $('periodTitle').textContent = p.label;
+  $('periodSub').textContent = p.timeStr + ' · ' + p.sub;
+  $('periodPrice').textContent = p.price;
+  $('periodPrice').style.color = p.isPeak ? 'var(--warn)' : 'var(--success)';
+  $('periodCountdown').textContent = p.countdown;
+  $('periodNote').innerHTML = p.isPeak
+    ? '⚠️ 高峰期 V4价格翻倍，优惠仅谷值生效 · <span style="color:var(--success)">谷值省50%</span>'
+    : p.isHistOff
+      ? '💡 当前为历史最优惠窗口 00:30-08:30，V3/R1曾享75% off'
+      : '✅ 谷值时段，价格正常，建议批量任务此时跑';
+  // hero 颜色同步（如果已显示）
+  const hero = document.querySelector('.hero');
+  if(hero){ hero.className = 'hero ' + p.cls; }
+}
+renderPeriod();
+setInterval(renderPeriod, 30000);
+
+// ---------- 历史记录 ----------
+function loadHistory(){
+  try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); }catch{ return []; }
+}
+function saveHistory(arr){
+  localStorage.setItem(HIST_KEY, JSON.stringify(arr.slice(-60)));
+}
+function upsertHistory(balance, currency){
+  const today = getBeijingNow().toISOString().slice(0,10);
+  const hist = loadHistory();
+  const entry = {date: today, balance: parseFloat(balance), currency, ts: Date.now()};
+  const idx = hist.findIndex(x=>x.date===today);
+  if(idx>=0) hist[idx]=entry; else hist.push(entry);
+  hist.sort((a,b)=>a.date.localeCompare(b.date));
+  saveHistory(hist);
+  return hist;
+}
+function computeStats(hist){
+  if(hist.length<2) return {today:'-', yesterday:'-', week:'-', daily:[]};
+  // daily consumption = prevBalance - currBalance (正数为消耗，负数为充值)
+  const daily=[];
+  for(let i=1;i<hist.length;i++){
+    const delta = hist[i-1].balance - hist[i].balance;
+    daily.push({date: hist[i].date, delta, balance: hist[i].balance});
+  }
+  // 今日消耗（最后一条）
+  const last = daily[daily.length-1];
+  const today = last ? last.delta : 0;
+  const yesterday = daily.length>=2 ? daily[daily.length-2].delta : 0;
+  // 近7日（最近7个delta）
+  const last7 = daily.slice(-7);
+  const week = last7.reduce((s,x)=>s + Math.max(0,x.delta),0);
+  return {today, yesterday, week, daily: last7};
+}
+
+// ---------- 余额查询 ----------
 function loadKey(){
   const k = localStorage.getItem(KEY) || '';
   $('apiKey').value = k;
   if(k) fetchBalance(k);
-  // iOS standalone detection
   const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
   if(!isStandalone) $('installBar').classList.add('show');
+  renderConsumption();
 }
 $('toggleEye').onclick = () => {
-  const i = $('apiKey');
-  i.type = i.type === 'password' ? 'text' : 'password';
+  const i=$('apiKey'); i.type=i.type==='password'?'text':'password';
 };
 $('apiKey').addEventListener('keydown', e=>{ if(e.key==='Enter') saveAndFetch(); });
 
 function saveAndFetch(){
-  const k = $('apiKey').value.trim();
+  const k=$('apiKey').value.trim();
   if(!k){ toast('请输入 API Key'); return; }
-  if(!k.startsWith('sk-')){ toast('Key 格式应为 sk- 开头'); }
-  localStorage.setItem(KEY, k);
+  if(!k.startsWith('sk-')) toast('Key格式应为 sk- 开头');
+  localStorage.setItem(KEY,k);
   fetchBalance(k);
 }
 function clearKey(){
+  if(!confirm('清除本地保存的Key和历史记录？')) return;
   localStorage.removeItem(KEY);
+  localStorage.removeItem(HIST_KEY);
   $('apiKey').value='';
   $('result').style.display='none';
+  $('consumption').style.display='none';
   $('status').innerHTML='';
 }
 function toast(msg){
-  $('status').innerHTML = `<div class="error">${msg}</div>`;
-  setTimeout(()=>$('status').innerHTML='', 3000);
+  $('status').innerHTML=`<div class="error">${msg}</div>`;
+  setTimeout(()=>$('status').innerHTML='',3000);
 }
-
 async function fetchBalance(key){
-  $('status').innerHTML = '<div class="status pulse">查询中…</div>';
+  $('status').innerHTML='<div class="status pulse">查询中…</div>';
   $('result').style.display='none';
-  $('saveBtn').textContent='查询中…';
-  $('saveBtn').disabled=true;
+  $('saveBtn').textContent='查询中…'; $('saveBtn').disabled=true;
   try{
-    let data, ok=false, errMsg='';
-    // 1) try proxy first (no CORS issue), then direct
-    const endpoints = [
-      {url:'/api/balance', via:'proxy'},
-      {url:'https://api.deepseek.com/user/balance', via:'direct'}
-    ];
-    for(const ep of endpoints){
+    let data, ok=false, err='';
+    for(const url of ['/api/balance','https://api.deepseek.com/user/balance']){
       try{
-        const r = await fetch(ep.url, {
-          headers:{'Authorization':'Bearer '+key},
-          cache:'no-store'
-        });
-        const text = await r.text();
-        let j;
-        try{ j=JSON.parse(text); }catch{ j={raw:text} }
-        if(r.ok && (j.balance_infos || j.is_available!==undefined)){
-          data=j; ok=true; break;
-        } else {
-          errMsg = j.error?.message || j.msg || j.message || text.slice(0,200) || `HTTP ${r.status}`;
-          // if 401/403 no need to try next
-          if(r.status===401 || r.status===403) break;
-          // else try next endpoint
-          continue;
-        }
-      }catch(e){
-        errMsg = e.message;
-        continue;
-      }
+        const r=await fetch(url,{headers:{'Authorization':'Bearer '+key},cache:'no-store'});
+        const t=await r.text();
+        let j; try{j=JSON.parse(t)}catch{j={raw:t}}
+        if(r.ok && (j.balance_infos||j.is_available!==undefined)){ data=j; ok=true; break; }
+        else{ err=j.error?.message||j.msg||t.slice(0,200)||`HTTP ${r.status}`; if(r.status===401||r.status===403) break; }
+      }catch(e){ err=e.message; }
     }
-    if(!ok) throw new Error(errMsg || '请求失败，请检查Key或网络');
-
-    render(data, key);
-    $('status').innerHTML = `<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">更新于 ${new Date().toLocaleString()} · 每30秒自动刷新</div>`;
-    // auto refresh
+    if(!ok) throw new Error(err||'请求失败');
+    render(data);
+    upsertHistory((data.balance_infos?.[0]?.total_balance)||'0', data.balance_infos?.[0]?.currency||'CNY');
+    renderConsumption();
+    $('status').innerHTML=`<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">更新于 ${new Date().toLocaleString()} · 每30秒自动刷新 · 峰谷已同步</div>`;
     clearInterval(window._timer);
-    window._timer = setInterval(()=> fetchBalanceSilent(key), 30000);
+    window._timer=setInterval(()=>fetchBalanceSilent(key),30000);
   }catch(e){
-    $('status').innerHTML = `<div class="error">❌ ${e.message}</div>`;
-  }finally{
-    $('saveBtn').textContent='保存并查询';
-    $('saveBtn').disabled=false;
-  }
+    $('status').innerHTML=`<div class="error">❌ ${e.message}</div>`;
+  }finally{ $('saveBtn').textContent='保存并查询'; $('saveBtn').disabled=false; }
 }
 async function fetchBalanceSilent(key){
   try{
-    const r = await fetch('/api/balance', {headers:{'Authorization':'Bearer '+key}, cache:'no-store'});
-    const j = await r.json();
-    if(r.ok) render(j, key);
+    const r=await fetch('/api/balance',{headers:{'Authorization':'Bearer '+key},cache:'no-store'});
+    const j=await r.json();
+    if(r.ok){ render(j); upsertHistory((j.balance_infos?.[0]?.total_balance)||'0', j.balance_infos?.[0]?.currency||'CNY'); renderConsumption(); }
   }catch{}
 }
-
-function render(data, key){
-  const info = (data.balance_infos && data.balance_infos[0]) || {};
-  const total = info.total_balance ?? '0.00';
-  const granted = info.granted_balance ?? '0.00';
-  const topped = info.topped_up_balance ?? '0.00';
-  const cur = info.currency || 'CNY';
-  const avail = data.is_available;
-  const totalNum = parseFloat(total);
-
-  let level = '正常';
-  let color = 'var(--success)';
-  if(totalNum < 1) { level='余额不足'; color='var(--warn)'; }
-  if(totalNum <= 0 || avail===false) { level='不可用'; color='#ff3b30'; }
-
-  $('result').innerHTML = `
-    <div class="hero">
-      <div class="hero-label">总余额 · ${cur}</div>
+function render(data){
+  const info=(data.balance_infos&&data.balance_infos[0])||{};
+  const total=info.total_balance??'0.00';
+  const granted=info.granted_balance??'0.00';
+  const topped=info.topped_up_balance??'0.00';
+  const cur=info.currency||'CNY';
+  const avail=data.is_available;
+  const n=parseFloat(total);
+  const p=getPeriod();
+  let level='正常';
+  if(n<2) level='余额偏低';
+  if(n<=0||avail===false) level='不可用';
+  $('result').innerHTML=`
+    <div class="hero ${p.cls}">
+      <div class="hero-label">总余额 · ${cur} · ${p.isPeak?'高峰×2':'谷值优惠'}</div>
       <div class="hero-value">${Number(total).toFixed(2)} <span style="font-size:18px;font-weight:600;opacity:.9">${cur}</span></div>
-      <div class="hero-sub"><span class="dot ${avail===false?'off':''}"></span>${avail===false?'账户不可用': avail===true?'账户可用':' '} · ${level} · <span style="opacity:.9">${cur} ${total}</span></div>
+      <div class="hero-sub"><span class="dot ${avail===false?'off':p.isPeak?'warn':''}"></span>${avail===false?'账户不可用':avail===true?'账户可用':''} · ${level} · ${p.label}</div>
       <div class="hero-foot">
-        <span class="badge">${avail===false?'🔴 不可用':'🟢 可用'}</span>
-        <button class="btn btn-ghost btn-small" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.2);backdrop-filter:blur(8px)" onclick="copyBalance('${total}')">复制余额</button>
+        <span class="badge">${p.isPeak?'🔴 高峰贵':'🟢 谷值便宜'} · ${p.countdown}</span>
+        <button class="btn btn-ghost btn-small" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.2);backdrop-filter:blur(8px)" onclick="copyBalance('${total}')">复制</button>
       </div>
     </div>
     <div class="balance-grid">
-      <div class="stat">
-        <div class="stat-label">赠送余额</div>
-        <div class="stat-value">${Number(granted).toFixed(2)}</div>
-        <div class="stat-sub">${cur} · 赠送</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">充值余额</div>
-        <div class="stat-value">${Number(topped).toFixed(2)}</div>
-        <div class="stat-sub">${cur} · 充值</div>
-      </div>
+      <div class="stat"><div class="stat-label">赠送余额</div><div class="stat-value">${Number(granted).toFixed(2)}</div><div class="stat-sub">${cur} · 赠送</div></div>
+      <div class="stat"><div class="stat-label">充值余额</div><div class="stat-value">${Number(topped).toFixed(2)}</div><div class="stat-sub">${cur} · 充值</div></div>
     </div>
-    <div class="card" style="margin-top:12px;display:flex;gap:8px">
+    <div class="card" style="margin-top:12px;display:flex;gap:8px;padding:14px">
       <button class="btn btn-ghost" style="flex:1" onclick="fetchBalance(localStorage.getItem('${KEY}'))">🔄 刷新</button>
       <button class="btn btn-ghost" style="flex:1" onclick="copyKey()">📋 复制Key</button>
     </div>
   `;
   $('result').style.display='block';
-  // update theme color by balance
-  try{ document.querySelector('meta[name="theme-color"]').content = totalNum<1 ? '#1c1c1e' : '#4f46e5'; }catch{}
+  try{ document.querySelector('meta[name="theme-color"]').content=p.isPeak?'#7c2d12':p.cls==='valley'?'#0a4a1a':'#4f46e5'; }catch{}
 }
+function renderConsumption(){
+  const hist=loadHistory();
+  const box=$('consumption');
+  if(hist.length===0){ box.style.display='none'; return; }
+  const stats=computeStats(hist);
+  const hasData = hist.length>=2;
+  // chart bars for last 7
+  const max = Math.max(0.01, ...stats.daily.map(d=>Math.max(0,d.delta)));
+  const bars = stats.daily.length? stats.daily.map(d=>{
+    const v=Math.max(0,d.delta);
+    const h = Math.max(6, (v/max)*60);
+    const col = v>0 ? (getPeriod().isPeak?'linear-gradient(180deg,#ff9f0a,#ff3b30)':'linear-gradient(180deg,#4f46e5,#7c3aed)') : 'var(--border)';
+    const md = d.date.slice(5).replace('-','/');
+    return `<div class="bar-col"><div class="bar-val">${v>0?v.toFixed(2):'0'}</div><div class="bar" style="height:${h}px;background:${col}"></div><div class="bar-label">${md}</div></div>`;
+  }).join('') : '<div style="font-size:12px;color:var(--muted);padding:16px;text-align:center">连续查询2天后自动生成消耗趋势</div>';
 
-function copyBalance(v){
-  navigator.clipboard.writeText(v).then(()=> toast('已复制: '+v));
-}
-function copyKey(){
-  const k = localStorage.getItem(KEY)||'';
-  if(!k) return toast('没有Key');
-  navigator.clipboard.writeText(k).then(()=> toast('Key 已复制'));
-}
+  const todayStr = hasData ? (stats.today>0?`¥${stats.today.toFixed(2)}`: stats.today<0?`+充值 ¥${Math.abs(stats.today).toFixed(2)}`:'¥0.00') : '-';
+  const yestStr = hasData && stats.daily.length>=2 ? (stats.yesterday>0?`¥${stats.yesterday.toFixed(2)}`: stats.yesterday<0?`+¥${Math.abs(stats.yesterday).toFixed(2)}`:'¥0.00') : '-';
+  const weekStr = hasData ? `¥${stats.week.toFixed(2)}` : '-';
 
-// sw
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  box.innerHTML=`
+    <div class="card" style="margin-top:14px">
+      <div class="card-label">消费统计 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">基于本地快照 · 每日首次查询记录</span></div>
+      <div class="consumption-grid">
+        <div class="cstat"><div class="cstat-val" style="color:${stats.today>0?'var(--danger)':'var(--success)'}">${todayStr}</div><div class="cstat-label">今日消耗</div></div>
+        <div class="cstat"><div class="cstat-val">${yestStr}</div><div class="cstat-label">昨日消耗</div></div>
+        <div class="cstat"><div class="cstat-val">¥${weekStr.replace('¥','')}</div><div class="cstat-label">近7日合计</div></div>
+      </div>
+      <div class="chart">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px">近7日趋势 · 谷值时段更省钱</div>
+        <div class="bars">${bars}</div>
+      </div>
+      <div class="timeline" id="timeline"></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5">💡 原理：每次查询记录当日余额，消耗=昨日余额-今日余额。若当日充值会显示为“+充值”。官方暂无账单API，此为本地估算。</div>
+    </div>
+  `;
+  box.style.display='block';
+  // timeline last 7
+  const tl = box.querySelector('#timeline');
+  if(tl && hist.length>=1){
+    const rows = hist.slice(-7).reverse().map((h,i,arr)=>{
+      const next = arr[i+1];
+      // delta vs previous day (chronological): need prev in original order
+      const histIdx = hist.findIndex(x=>x.date===h.date);
+      const prev = histIdx>0 ? hist[histIdx-1] : null;
+      const delta = prev ? (prev.balance - h.balance) : 0;
+      let cls='delta-zero', txt='首日';
+      if(prev){
+        if(delta>0){ cls='delta-down'; txt=`-¥${delta.toFixed(2)} 消耗`; }
+        else if(delta<0){ cls='delta-up'; txt=`+¥${Math.abs(delta).toFixed(2)} 充值`; }
+        else { txt='无变化'; }
+      }
+      return `<div class="trow"><span class="trow-date">${h.date}</span><span class="trow-balance">¥${h.balance.toFixed(2)} ${h.currency||'CNY'}</span><span class="trow-delta ${cls}">${txt}</span></div>`;
+    }).join('');
+    tl.innerHTML = rows;
+  }
 }
+function copyBalance(v){ navigator.clipboard.writeText(v).then(()=>toast('已复制: '+v)); }
+function copyKey(){ const k=localStorage.getItem(KEY)||''; if(!k) return toast('没有Key'); navigator.clipboard.writeText(k).then(()=>toast('Key已复制')); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
 loadKey();
 </script>
 </body>
