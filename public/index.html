@@ -261,6 +261,14 @@ function computeStats(hist){
 
 // ---------- 余额查询 ----------
 function loadKey(){
+  // 支持 ?key=sk-xxx 一键导入
+  try{
+    const urlKey = new URLSearchParams(location.search).get('key') || new URLSearchParams(location.search).get('api_key') || new URLSearchParams(location.search).get('apiKey');
+    if(urlKey && urlKey.startsWith('sk-')){
+      localStorage.setItem(KEY, urlKey.trim());
+      history.replaceState({},'',location.pathname);
+    }
+  }catch{}
   const k = localStorage.getItem(KEY) || '';
   $('apiKey').value = k;
   if(k) fetchBalance(k);

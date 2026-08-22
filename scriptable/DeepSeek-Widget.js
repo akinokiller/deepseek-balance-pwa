@@ -1,32 +1,16 @@
 // DeepSeek 余额小组件 - Scriptable
-// 功能：余额 + 峰谷变色 + 每日/近7日消耗
-// 安装：Scriptable App 粘贴此脚本 → 参数填 sk-xxx → 桌面添加 Scriptable 小组件
+// 推荐：小组件参数填 sk-xxx（最安全，不进仓库）
+// 备选：首次运行会弹窗让你输入，存到 iCloud 的 deepseek_key.txt（本地，不上传）
 
-// ========== 配置 ==========
 const CONFIG = {
-  // 优先用小组件参数里的 Key，留空则用这里的
-  apiKey: "", // 例: "sk-xxxxxxxx"
-  // 直连官方（Scriptable无CORS限制），失败自动切代理
-  proxyUrl: "https://deepseek-balance-pwa.pages.dev/api/balance",
-  pwaUrl: "https://deepseek-balance-pwa.pages.dev",
-  historyFile: "deepseek_history.json", // 存iCloud便于同步，也可改成本地
+  apiKey: "", // 留空！用 widgetParameter 或弹窗输入，别写死到公开仓库
+  proxyUrl: "https://ds1.dengdeng.uk/api/balance",
+  pwaUrl: "https://ds1.dengdeng.uk",
+  historyFile: "deepseek_history.json",
 }
-// 允许 widgetParameter 覆盖
 if (args.widgetParameter && args.widgetParameter.startsWith("sk-")) {
   CONFIG.apiKey = args.widgetParameter.trim()
 }
-
-// ========== 峰谷逻辑（与PWA一致 V4规则）==========
-function getBeijingNow(){
-  const now = new Date()
-  const utc = now.getTime() + now.getTimezoneOffset()*60000
-  return new Date(utc + 8*3600000)
-}
-function getPeriod(){
-  const bj = getBeijingNow()
-  const h = bj.getHours() + bj.getMinutes()/60
-  const isPeak = (h>=9 && h<12) || (h>=14 && h<18) // 北京 09-12, 14-18
-  const isHistOff = (h>=0.5 && h<8.5)
   const mins = bj.getHours()*60 + bj.getMinutes()
   let nextMins
   if(mins < 9*60) nextMins = 9*60
